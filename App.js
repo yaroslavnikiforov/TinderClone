@@ -1,21 +1,20 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { Component } from "react";
+import { StyleSheet, View } from "react-native";
 
-export default class App extends React.Component {
+export default class App extends Component {
   render() {
-    return (
-      <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
-      </View>
-    );
+    return <View style={styles.card} />;
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
+  card: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+    marginVertical: 100,
+    marginHorizontal: 10,
+    backgroundColor: "white",
+    borderWidth: 1,
+    borderColor: "lightgrey",
+    borderRadius: 8
+  }
 });
