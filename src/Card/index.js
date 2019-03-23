@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import {
   StyleSheet,
   View,
@@ -7,13 +8,15 @@ import {
   Animated,
   PanResponder,
 } from 'react-native'
+import moment from 'moment'
 
 import styles from './styles'
 
-const fbImage =
-  'https://graph.facebook.com/10155639858650271/picture?height=500'
+class Card extends Component {
+  static propTypes = {
+    profile: PropTypes.object,
+  }
 
-export default class Card extends Component {
   componentWillMount() {
     this.pan = new Animated.ValueXY()
     this.cardPanResponder = PanResponder.create({
@@ -42,6 +45,10 @@ export default class Card extends Component {
   }
 
   render() {
+    const { birthday, name, bio, id } = this.props.profile
+    const age = moment().diff(moment(birthday, 'MM/DD/YYYY'), 'years')
+    const fbImage = `https://graph.facebook.com/${id}/picture?height=500`
+
     const rotateCard = this.pan.x.interpolate({
       inputRange: [-200, 0, 200],
       outputRange: ['10deg', '0deg', '-10deg'],
@@ -61,10 +68,14 @@ export default class Card extends Component {
       >
         <Image style={styles.image} source={{ uri: fbImage }} />
         <View style={styles.info}>
-          <Text style={styles.name}>Ginta, 30</Text>
-          <Text style={styles.position}>supermodel</Text>
+          <Text style={styles.name}>
+            {name}, {age}
+          </Text>
+          <Text style={styles.bio}>{bio}</Text>
         </View>
       </Animated.View>
     )
   }
 }
+
+export default Card

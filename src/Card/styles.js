@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
 
-  position: {
+  bio: {
     color: 'darkgrey',
     fontSize: 15,
   },
