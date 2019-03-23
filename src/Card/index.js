@@ -15,9 +15,12 @@ import styles from './styles'
 class Card extends Component {
   static propTypes = {
     profile: PropTypes.object,
+    onSwipeOff: PropTypes.func,
   }
 
   componentWillMount() {
+    const { onSwipeOff } = this.props
+
     this.pan = new Animated.ValueXY()
     this.cardPanResponder = PanResponder.create({
       onStartShouldSetPanResponder: () => true,
@@ -33,7 +36,7 @@ class Card extends Component {
           Animated.decay(this.pan, {
             velocity: { x: 3 * direction, y: 0 },
             deceleration: 0.995,
-          }).start()
+          }).start(onSwipeOff)
         } else {
           Animated.spring(this.pan, {
             toValue: { x: 0, y: 0 },

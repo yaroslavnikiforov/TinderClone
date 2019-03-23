@@ -11,15 +11,31 @@ const styles = StyleSheet.create({
 })
 
 class App extends Component {
+  state = {
+    profileIndex: 0,
+  }
+
   render() {
+    const { profileIndex } = this.state
+
     return (
       <View style={styles.container}>
-        {profiles.map(profile => (
-          <Card key={profile.id} profile={profile} />
-        ))}
+        {profiles
+          .slice(profileIndex, profileIndex + 3)
+          .reverse()
+          .map(profile => (
+            <Card
+              key={profile.id}
+              profile={profile}
+              onSwipeOff={this._onSwipeOff}
+            />
+          ))}
       </View>
     )
   }
+
+  _onSwipeOff = () =>
+    this.setState(prevState => ({ profileIndex: prevState.profileIndex + 1 }))
 }
 
 export default App
