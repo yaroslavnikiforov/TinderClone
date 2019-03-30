@@ -2,23 +2,10 @@ import React, { Component } from 'react'
 import { View, StyleSheet } from 'react-native'
 import * as firebase from 'firebase'
 
-import Card from './Card'
+import Card from '../../components/Card'
+import styles from './styles'
 
-const firebaseConfig = {
-  apiKey: 'AIzaSyCgo549LMZCLmLWSjdoEZk-W9CEQSLkI4Y',
-  databaseURL: 'https://tinderclone-5b194.firebaseio.com',
-}
-
-firebase.initializeApp(firebaseConfig)
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-})
-
-class App extends Component {
+class Home extends Component {
   state = {
     profileIndex: 0,
     profiles: [],
@@ -65,4 +52,4 @@ class App extends Component {
     this.setState(prevState => ({ profileIndex: prevState.profileIndex + 1 }))
 }
 
-export default App
+export default Home
