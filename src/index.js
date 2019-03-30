@@ -1,7 +1,15 @@
 import React, { Component } from 'react'
 import { View, StyleSheet } from 'react-native'
+import * as firebase from 'firebase'
 
 import Card from './Card'
+
+const firebaseConfig = {
+  apiKey: 'AIzaSyCgo549LMZCLmLWSjdoEZk-W9CEQSLkI4Y',
+  databaseURL: 'https://tinderclone-5b194.firebaseio.com',
+}
+
+firebase.initializeApp(firebaseConfig)
 
 const styles = StyleSheet.create({
   container: {
@@ -13,6 +21,14 @@ const styles = StyleSheet.create({
 class App extends Component {
   state = {
     profileIndex: 0,
+  }
+
+  componentWillMount() {
+    firebase
+      .database()
+      .ref()
+      .child('users')
+      .once('value', snap => console.info('Data: ', snap.val()))
   }
 
   render() {
