@@ -10,12 +10,12 @@ class Login extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <FacebookButton
-          onPress={() => console.log("facebook button pressed")}
-        />
+        <FacebookButton onPress={this._onFacebookButtonPress} />
       </View>
     );
   }
+
+  _onFacebookButtonPress = () => this.props.navigation.navigate("Home");
 }
 
 export default Login;

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import { createStackNavigator, createAppContainer } from "react-navigation";
 import * as firebase from "firebase";
 
 import Home from "./screens/Home";
@@ -11,8 +11,14 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
-export default class App extends Component {
-  render() {
-    return <Login />;
+const RouteConfigs = createStackNavigator(
+  {
+    Login: { screen: Login },
+    Home: { screen: Home }
+  },
+  {
+    headerMode: "none"
   }
-}
+);
+
+export default createAppContainer(RouteConfigs);
