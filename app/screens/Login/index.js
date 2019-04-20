@@ -1,10 +1,13 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import firebase from "firebase";
+
+import { Permissions, Location } from "expo";
 import { Facebook } from "expo";
 import { View } from "react-native";
 
 import FacebookButton from "../../components/FacebookButton";
+
+import firebase from "firebase";
 
 import styles from "./styles";
 
@@ -18,12 +21,28 @@ class Login extends Component {
   }
 
   componentDidMount() {
+    this._updateUserLocation();
+
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
         this.props.navigation.navigate("Home");
       }
     });
   }
+
+  _updateUserLocation = async () => {
+    const { status } = await Permissions.askAsync(Permissions.LOCATION);
+
+    if (status === "granted") {
+      const location = await Location.getCurrentPositionAsync({
+        enableHighAccuracy: false
+      });
+      console.log("Permission granted");
+      console.info("location: ", location);
+    } else {
+      console.log("Permission denied");
+    }
+  };
 
   _authenticate = token => {
     const provider = firebase.auth.FacebookAuthProvider;
