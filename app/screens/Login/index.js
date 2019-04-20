@@ -26,15 +26,18 @@ class Login extends Component {
 
   _login = async () => {
     const APP_ID = "2182360415187709";
-    const options = { permissions: ["public_profile", "email"] };
+    const options = {
+      permissions: ["public_profile", "email", "user_birthday"]
+    };
     const { type, token } = await Facebook.logInWithReadPermissionsAsync(
       APP_ID,
       options
     );
 
     if (type === "success") {
+      const fields = ["id", "first_name", "last_name", "gender", "birthday"];
       const response = await fetch(
-        `https://graph.facebook.com/me?access_token=${token}`
+        `https://graph.facebook.com/me?fields=${fields.toString()}&access_token=${token}`
       );
 
       console.log(await response.json());
