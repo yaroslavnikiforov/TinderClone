@@ -40,10 +40,19 @@ class Login extends Component {
         `https://graph.facebook.com/me?fields=${fields.toString()}&access_token=${token}`
       );
 
-      console.log(await response.json());
+      const userData = await response.json();
+      const { user: { uid } = {} } = await this._authenticate(token);
 
-      this._authenticate(token);
+      this._createUser(uid, userData);
     }
+  };
+
+  _createUser = (uid, userData) => {
+    firebase
+      .database()
+      .ref("users")
+      .child(uid)
+      .update(userData);
   };
 }
 
