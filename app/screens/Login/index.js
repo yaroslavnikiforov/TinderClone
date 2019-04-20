@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import firebase from "firebase";
 import { Facebook } from "expo";
 import { View } from "react-native";
 
@@ -16,11 +17,16 @@ class Login extends Component {
     );
   }
 
-  _onFacebookButtonPress = () => this.props.navigation.navigate("Home");
+  _authenticate = token => {
+    const provider = firebase.auth.FacebookAuthProvider;
+    const credential = provider.credential(token);
+
+    return firebase.auth().signInAndRetrieveDataWithCredential(credential);
+  };
 
   _login = async () => {
     const APP_ID = "2182360415187709";
-    const options = { permissions: ["public_profile"] };
+    const options = { permissions: ["public_profile", "email"] };
     const { type, token } = await Facebook.logInWithReadPermissionsAsync(
       APP_ID,
       options
@@ -32,6 +38,8 @@ class Login extends Component {
       );
 
       console.log(await response.json());
+
+      this._authenticate(token);
     }
   };
 }
