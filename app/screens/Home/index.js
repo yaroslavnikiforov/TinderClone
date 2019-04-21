@@ -1,8 +1,12 @@
 import React, { Component } from "react";
+
+import { Permissions, Location } from "expo";
 import { View, StyleSheet } from "react-native";
+import GeoFire from "geofire";
 import * as firebase from "firebase";
 
 import Card from "../../components/Card";
+
 import styles from "./styles";
 
 class Home extends Component {
@@ -11,7 +15,28 @@ class Home extends Component {
     profiles: []
   };
 
-  componentWillMount() {
+  render() {
+    const { profileIndex, profiles } = this.state;
+
+    return (
+      <View style={styles.container}>
+        {profiles
+          .slice(profileIndex, profileIndex + 3)
+          .reverse()
+          .map(profile => (
+            <Card
+              key={profile.id}
+              profile={profile}
+              onSwipeOff={this._swipeCard}
+            />
+          ))}
+      </View>
+    );
+  }
+
+  componentDidMount() {
+    this._updateUserLocation(this.props.navigation.state.params.uid);
+
     firebase
       .database()
       .ref()
@@ -29,27 +54,27 @@ class Home extends Component {
       });
   }
 
-  render() {
-    const { profileIndex, profiles } = this.state;
+  _updateUserLocation = async uid => {
+    const { status } = await Permissions.askAsync(Permissions.LOCATION);
 
-    return (
-      <View style={styles.container}>
-        {profiles
-          .slice(profileIndex, profileIndex + 3)
-          .reverse()
-          .map(profile => (
-            <Card
-              key={profile.id}
-              profile={profile}
-              onSwipeOff={this._onSwipeOff}
-            />
-          ))}
-      </View>
-    );
-  }
+    if (status === "granted") {
+      const location = await Location.getCurrentPositionAsync({
+        enableHighAccuracy: false
+      });
+      const { latitude, longitude } = location.coords;
+      const geoFireRef = new GeoFire(firebase.database().ref("geoData"));
 
-  _onSwipeOff = () =>
-    this.setState(prevState => ({ profileIndex: prevState.profileIndex + 1 }));
+      geoFireRef.set(uid, [latitude, longitude]);
+
+      console.log("Permission granted");
+      console.info("location: ", location);
+    } else {
+      console.log("Permission denied");
+    }
+  };
+
+  _swipeCard = () =>
+    this.setState(state => ({ profileIndex: state.profileIndex + 1 }));
 }
 
 export default Home;

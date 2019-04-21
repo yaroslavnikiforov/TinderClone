@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+
 import { View, Image, Text, Animated, PanResponder } from "react-native";
+
 import moment from "moment";
 
 import styles from "./styles";
@@ -11,8 +13,10 @@ class Card extends Component {
     onSwipeOff: PropTypes.func
   };
 
-  componentWillMount() {
-    const { onSwipeOff } = this.props;
+  constructor(props) {
+    super(props);
+
+    const { onSwipeOff } = props;
 
     this.pan = new Animated.ValueXY();
     this.cardPanResponder = PanResponder.create({
