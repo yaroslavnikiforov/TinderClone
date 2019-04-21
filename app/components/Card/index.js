@@ -45,7 +45,9 @@ class Card extends Component {
   }
 
   render() {
-    const { birthday, name, bio, id } = this.props.profile;
+    const { birthday, first_name, work, id } = this.props.profile;
+    const bio =
+      work && work[0] && work[0].position ? work[0].position.name : null;
     const age = moment().diff(moment(birthday, "MM/DD/YYYY"), "years");
     const fbImage = `https://graph.facebook.com/${id}/picture?height=500`;
 
@@ -69,9 +71,9 @@ class Card extends Component {
         <Image style={styles.image} source={{ uri: fbImage }} />
         <View style={styles.info}>
           <Text style={styles.name}>
-            {name}, {age}
+            {first_name}, {age}
           </Text>
-          <Text style={styles.bio}>{bio}</Text>
+          {bio && <Text style={styles.bio}>{bio}</Text>}
         </View>
       </Animated.View>
     );

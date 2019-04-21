@@ -35,24 +35,42 @@ class Home extends Component {
   }
 
   componentDidMount() {
-    this._updateUserLocation(this.props.navigation.state.params.uid);
+    const { uid } = this.props.navigation.state.params;
 
-    firebase
-      .database()
-      .ref()
-      .child("users")
-      .once("value", snap => {
-        let profiles = [];
-
-        snap.forEach(profile => {
-          const { id, name, bio, birthday } = profile.val();
-
-          profiles.push({ id, name, bio, birthday });
-        });
-
-        this.setState({ profiles });
-      });
+    this._updateUserLocation(uid);
+    this._getProfiles(uid);
   }
+
+  _getUser = uid => {
+    return firebase
+      .database()
+      .ref("users")
+      .child(uid)
+      .once("value");
+  };
+
+  _getProfiles = async uid => {
+    const geoFireRef = new GeoFire(firebase.database().ref("geoData"));
+    const userLocation = await geoFireRef.get(uid);
+    const geoQuery = geoFireRef.query({
+      center: userLocation,
+      radius: 10 // km
+    });
+
+    geoQuery.on("key_entered", async (uid, location, distance) => {
+      console.log(
+        uid + " at " + location + " is " + distance + " km from the center"
+      );
+
+      const user = await this._getUser(uid);
+
+      console.log(user.val().first_name);
+
+      const profiles = [...this.state.profiles, user.val()];
+
+      this.setState({ profiles });
+    });
+  };
 
   _updateUserLocation = async uid => {
     const { status } = await Permissions.askAsync(Permissions.LOCATION);
@@ -61,7 +79,9 @@ class Home extends Component {
       const location = await Location.getCurrentPositionAsync({
         enableHighAccuracy: false
       });
-      const { latitude, longitude } = location.coords;
+      //const { latitude, longitude } = location.coords;
+      const latitude = 37.39239;
+      const longitude = -122.09072;
       const geoFireRef = new GeoFire(firebase.database().ref("geoData"));
 
       geoFireRef.set(uid, [latitude, longitude]);
