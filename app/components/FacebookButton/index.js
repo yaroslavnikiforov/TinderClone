@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { TouchableHighlight, View, Text } from "react-native";
 import Icon from "@expo/vector-icons/FontAwesome";
-
 import styles from "./styles";
 
 class FacebookButton extends Component {

@@ -1,11 +1,8 @@
 import React, { Component } from "react";
-
 import { Facebook } from "expo";
 import { View } from "react-native";
 import firebase from "firebase";
-
 import FacebookButton from "../../components/FacebookButton";
-
 import styles from "./styles";
 
 class Login extends Component {

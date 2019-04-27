@@ -1,6 +1,5 @@
 import { createStackNavigator, createAppContainer } from "react-navigation";
 import * as firebase from "firebase";
-
 import Home from "./screens/Home";
 import Login from "./screens/Login";
 

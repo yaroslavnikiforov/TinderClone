@@ -1,12 +1,10 @@
 import React, { Component } from "react";
-
 import { Permissions, Location } from "expo";
 import { View, StyleSheet } from "react-native";
 import GeoFire from "geofire";
 import * as firebase from "firebase";
-
 import Card from "../../components/Card";
-
+import SimpleScroller from "../../components/SimpleScroller";
 import styles from "./styles";
 
 class Home extends Component {
@@ -16,6 +14,10 @@ class Home extends Component {
   };
 
   render() {
+    return <SimpleScroller screen={this._renderCardStack()} />;
+  }
+
+  _renderCardStack = () => {
     const { profileIndex, profiles } = this.state;
 
     return (
@@ -32,7 +34,7 @@ class Home extends Component {
           ))}
       </View>
     );
-  }
+  };
 
   componentDidMount() {
     const { uid } = this.props.navigation.state.params;
