@@ -14,7 +14,14 @@ class Home extends Component {
   };
 
   render() {
-    return <SimpleScroller screen={this._renderCardStack()} />;
+    return (
+      <SimpleScroller
+        screens={[
+          <View style={{ flex: 1, backgroundColor: "red" }} />,
+          this._renderCardStack()
+        ]}
+      />
+    );
   }
 
   _renderCardStack = () => {
