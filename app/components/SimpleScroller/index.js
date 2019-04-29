@@ -11,7 +11,7 @@ import styles from "./styles";
 
 const { width, height } = Dimensions.get("window");
 
-export default class SimpleScroller extends Component {
+class SimpleScroller extends Component {
   static propTypes = {
     screens: PropTypes.array
   };
@@ -77,3 +77,5 @@ export default class SimpleScroller extends Component {
     );
   }
 }
+
+export default SimpleScroller;

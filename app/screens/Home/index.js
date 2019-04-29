@@ -5,6 +5,7 @@ import GeoFire from "geofire";
 import * as firebase from "firebase";
 import Card from "../../components/Card";
 import SimpleScroller from "../../components/SimpleScroller";
+import Profile from "../Profile";
 import styles from "./styles";
 
 class Home extends Component {
@@ -17,10 +18,7 @@ class Home extends Component {
   render() {
     return (
       <SimpleScroller
-        screens={[
-          <View style={{ flex: 1, backgroundColor: "red" }} />,
-          this._renderCardStack()
-        ]}
+        screens={[<Profile user={this.state.user} />, this._renderCardStack()]}
       />
     );
   }
