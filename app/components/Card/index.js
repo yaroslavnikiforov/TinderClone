@@ -66,10 +66,12 @@ class Card extends Component {
         style={[styles.container, animatedStyles]}
       >
         <Image style={styles.image} source={{ uri: fbImage }} />
+
         <View style={styles.info}>
           <Text style={styles.name}>
             {first_name}, {age}
           </Text>
+
           {bio && <Text style={styles.bio}>{bio}</Text>}
         </View>
       </Animated.View>

@@ -21,6 +21,7 @@ class FacebookButton extends Component {
       >
         <View style={styles.container}>
           <Icon name={"facebook-f"} size={15} color={"white"} />
+
           <Text style={styles.label}>Login with Facebook</Text>
         </View>
       </TouchableHighlight>

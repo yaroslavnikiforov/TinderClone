@@ -1,21 +1,32 @@
 import React, { Component } from "react";
 import { Facebook } from "expo";
 import { StackActions, NavigationActions } from "react-navigation";
-import { View } from "react-native";
+import { View, ActivityIndicator } from "react-native";
 import firebase from "firebase";
 import FacebookButton from "../../components/FacebookButton";
 import styles from "./styles";
 
 class Login extends Component {
+  state = {
+    loading: true
+  };
+
   render() {
+    const { loading } = this.state;
+
     return (
       <View style={styles.container}>
-        <FacebookButton onPress={this._login} />
+        {loading ? (
+          <ActivityIndicator animating={loading} />
+        ) : (
+          <FacebookButton onPress={this._login} />
+        )}
       </View>
     );
   }
 
   componentDidMount() {
+    //firebase.auth().signOut();
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
         const resetAction = StackActions.reset({
@@ -28,6 +39,8 @@ class Login extends Component {
           ]
         });
         this.props.navigation.dispatch(resetAction);
+      } else {
+        this.setState({ loading: false });
       }
     });
   }
@@ -40,6 +53,8 @@ class Login extends Component {
   };
 
   _login = async () => {
+    this.setState({ loading: true });
+
     const APP_ID = "2182360415187709";
     const options = {
       permissions: ["public_profile", "email", "user_birthday"]
