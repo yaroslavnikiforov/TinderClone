@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Facebook } from "expo";
+import { StackActions, NavigationActions } from "react-navigation";
 import { View } from "react-native";
 import firebase from "firebase";
 import FacebookButton from "../../components/FacebookButton";
@@ -17,7 +18,16 @@ class Login extends Component {
   componentDidMount() {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        this.props.navigation.navigate("Home", { uid: user.uid });
+        const resetAction = StackActions.reset({
+          index: 0,
+          actions: [
+            NavigationActions.navigate({
+              routeName: "Home",
+              params: { uid: user.uid }
+            })
+          ]
+        });
+        this.props.navigation.dispatch(resetAction);
       }
     });
   }
