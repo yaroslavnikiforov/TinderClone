@@ -10,7 +10,8 @@ import styles from "./styles";
 class Home extends Component {
   state = {
     profileIndex: 0,
-    profiles: []
+    profiles: [],
+    user: this.props.navigation.state.params.user
   };
 
   render() {
@@ -44,7 +45,7 @@ class Home extends Component {
   };
 
   componentDidMount() {
-    const { uid } = this.props.navigation.state.params;
+    const { uid } = this.props.navigation.state.params.user;
 
     this._updateUserLocation(uid);
     this._getProfiles(uid);

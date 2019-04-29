@@ -27,23 +27,35 @@ class Login extends Component {
 
   componentDidMount() {
     //firebase.auth().signOut();
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        const resetAction = StackActions.reset({
-          index: 0,
-          actions: [
-            NavigationActions.navigate({
-              routeName: "Home",
-              params: { uid: user.uid }
-            })
-          ]
+    firebase.auth().onAuthStateChanged(auth => {
+      if (auth) {
+        this.firebaseRef = firebase.database().ref("users");
+        this.firebaseRef.child(auth.uid).on("value", snap => {
+          const user = snap.val();
+
+          if (user !== null) {
+            this.firebaseRef.child(auth.uid).off("value");
+            this._goHome(user);
+          }
         });
-        this.props.navigation.dispatch(resetAction);
       } else {
         this.setState({ loading: false });
       }
     });
   }
+
+  _goHome = user => {
+    const resetAction = StackActions.reset({
+      index: 0,
+      actions: [
+        NavigationActions.navigate({
+          routeName: "Home",
+          params: { user }
+        })
+      ]
+    });
+    this.props.navigation.dispatch(resetAction);
+  };
 
   _authenticate = token => {
     const provider = firebase.auth.FacebookAuthProvider;
@@ -82,7 +94,7 @@ class Login extends Component {
       .database()
       .ref("users")
       .child(uid)
-      .update(userData);
+      .update({ ...userData, uid });
   };
 }
 
