@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { View, StyleSheet, Text, Switch } from "react-native";
+import firebase from "firebase";
 import MultiSlider from "@ptomasroos/react-native-multi-slider";
 import CircleImage from "../../components/CircleImage";
 import styles from "./styles";
@@ -17,10 +18,10 @@ class Profile extends Component {
   };
 
   state = {
-    ageRange: [MIN_AGE, MAX_AGE],
-    distance: [DEFAULT_DISTANCE],
-    showMen: false,
-    showWomen: true
+    ageRange: this.props.user.ageRange || [MIN_AGE, MAX_AGE],
+    distance: [this.props.user.distance] || [DEFAULT_DISTANCE],
+    showMen: this.props.user.showMen,
+    showWomen: this.props.user.showWomen
   };
 
   render() {
@@ -51,6 +52,7 @@ class Profile extends Component {
             min={MIN_DISTANCE}
             max={MAX_DISTANCE}
             onValuesChange={this._onDistanceChange}
+            onValuesChangeFinish={this._updateDistance}
           />
 
           <View style={styles.labelWrapper}>
@@ -64,6 +66,7 @@ class Profile extends Component {
             min={MIN_AGE}
             max={MAX_AGE}
             onValuesChange={this._onAgeRangeChange}
+            onValuesChangeFinish={this._updateAgeRange}
           />
 
           <View style={styles.switchWrapper}>
@@ -86,9 +89,39 @@ class Profile extends Component {
 
   _onDistanceChange = distance => this.setState({ distance });
 
-  _switchShowMen = value => this.setState({ showMen: value });
+  _switchShowMen = value => {
+    this.setState({ showMen: value });
 
-  _switchShowWomen = value => this.setState({ showWomen: value });
+    firebase
+      .database()
+      .ref("users")
+      .child(this.props.user.uid)
+      .update({ showMen: value });
+  };
+
+  _switchShowWomen = value => {
+    this.setState({ showWomen: value });
+
+    firebase
+      .database()
+      .ref("users")
+      .child(this.props.user.uid)
+      .update({ showWomen: value });
+  };
+
+  _updateDistance = value =>
+    firebase
+      .database()
+      .ref("users")
+      .child(this.props.user.uid)
+      .update({ distance: value[0] });
+
+  _updateAgeRange = value =>
+    firebase
+      .database()
+      .ref("users")
+      .child(this.props.user.uid)
+      .update({ ageRange: value });
 }
 
 export default Profile;

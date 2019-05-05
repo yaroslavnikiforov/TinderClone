@@ -90,11 +90,17 @@ class Login extends Component {
   };
 
   _createUser = (uid, userData) => {
+    const defaults = {
+      uid,
+      distance: 10,
+      ageRange: [18, 24]
+    };
+
     firebase
       .database()
       .ref("users")
       .child(uid)
-      .update({ ...userData, uid });
+      .update({ ...userData, ...defaults });
   };
 }
 
