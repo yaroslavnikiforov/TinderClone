@@ -66,14 +66,7 @@ class Home extends Component {
     });
 
     geoQuery.on("key_entered", async (uid, location, distance) => {
-      console.log(
-        uid + " at " + location + " is " + distance + " km from the center"
-      );
-
       const user = await this._getUser(uid);
-
-      console.log(user.val().first_name);
-
       const profiles = [...this.state.profiles, user.val()];
 
       this.setState({ profiles });
@@ -95,7 +88,6 @@ class Home extends Component {
       geoFireRef.set(uid, [latitude, longitude]);
 
       console.log("Permission granted");
-      console.info("location: ", location);
     } else {
       console.log("Permission denied");
     }
