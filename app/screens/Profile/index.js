@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, Switch } from "react-native";
 import MultiSlider from "@ptomasroos/react-native-multi-slider";
 import CircleImage from "../../components/CircleImage";
 import styles from "./styles";
@@ -18,11 +18,13 @@ class Profile extends Component {
 
   state = {
     ageRange: [MIN_AGE, MAX_AGE],
-    distance: [DEFAULT_DISTANCE]
+    distance: [DEFAULT_DISTANCE],
+    showMen: false,
+    showWomen: true
   };
 
   render() {
-    const { ageRange, distance } = this.state;
+    const { ageRange, distance, showMen, showWomen } = this.state;
     const { first_name, work, id } = this.props.user;
     const bio =
       work && work[0] && work[0].position ? work[0].position.name : null;
@@ -63,6 +65,18 @@ class Profile extends Component {
             max={MAX_AGE}
             onValuesChange={this._onAgeRangeChange}
           />
+
+          <View style={styles.switchWrapper}>
+            <Text>Show women</Text>
+
+            <Switch value={showWomen} onValueChange={this._switchShowWomen} />
+          </View>
+
+          <View style={styles.switchWrapper}>
+            <Text>Show men</Text>
+
+            <Switch value={showMen} onValueChange={this._switchShowMen} />
+          </View>
         </View>
       </View>
     );
@@ -71,6 +85,10 @@ class Profile extends Component {
   _onAgeRangeChange = ageRange => this.setState({ ageRange });
 
   _onDistanceChange = distance => this.setState({ distance });
+
+  _switchShowMen = value => this.setState({ showMen: value });
+
+  _switchShowWomen = value => this.setState({ showWomen: value });
 }
 
 export default Profile;

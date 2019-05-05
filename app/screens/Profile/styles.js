@@ -35,6 +35,14 @@ const styles = StyleSheet.create({
     alignSelf: "stretch"
   },
 
+  switchWrapper: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    alignSelf: "stretch",
+    marginVertical: 10
+  },
+
   rangeLabel: {
     color: "darkgrey"
   }
