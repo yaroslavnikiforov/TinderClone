@@ -6,6 +6,7 @@ import * as firebase from "firebase";
 import Card from "../../components/Card";
 import SimpleScroller from "../../components/SimpleScroller";
 import Profile from "../Profile";
+import filter from "../../modules/filter";
 import styles from "./styles";
 
 class Home extends Component {
@@ -83,8 +84,9 @@ class Home extends Component {
     geoQuery.on("key_entered", async (uid, location, distance) => {
       const user = await this._getUser(uid);
       const profiles = [...this.state.profiles, user.val()];
+      const filtered = filter(profiles, this.state.user);
 
-      this.setState({ profiles });
+      this.setState({ profiles: filtered });
     });
   };
 
