@@ -1,4 +1,5 @@
-import { reject, filter } from "lodash";
+import { reject, filter, inRange, uniqBy } from "lodash";
+import moment from "moment";
 
 export default (profiles, user) => {
   const rejectMe = reject(profiles, profile => profile.uid === user.uid);
@@ -15,5 +16,28 @@ export default (profiles, user) => {
     );
   });
 
-  return filterGender;
+  const userBirthday = moment(user.birthday, "MM/DD/YYYY");
+  const userAge = moment().diff(userBirthday, "years");
+
+  const filterAgeRange = filter(filterGender, profile => {
+    const profileBirthday = moment(profile.birthday, "MM/DD/YYYY");
+    const profileAge = moment().diff(profileBirthday, "years");
+
+    const withinRangeUser = inRange(
+      profileAge,
+      user.ageRange[0],
+      user.ageRange[1] + 1
+    );
+    const withinRangeProfile = inRange(
+      userAge,
+      profile.ageRange[0],
+      profile.ageRange[1] + 1
+    );
+
+    return withinRangeUser && withinRangeProfile;
+  });
+
+  const filtered = uniqBy(filterAgeRange, "uid");
+
+  return filtered;
 };
