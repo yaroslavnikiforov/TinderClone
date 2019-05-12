@@ -18,12 +18,14 @@ class Home extends Component {
   };
 
   render() {
+    const { user } = this.state;
+
     return (
       <SimpleScroller
         screens={[
-          <Profile user={this.state.user} />,
+          <Profile user={user} />,
           this._renderCardStack(),
-          <Matches />
+          <Matches user={user} />
         ]}
       />
     );
