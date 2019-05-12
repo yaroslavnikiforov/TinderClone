@@ -25,7 +25,7 @@ class Home extends Component {
         screens={[
           <Profile user={user} />,
           this._renderCardStack(),
-          <Matches user={user} />
+          <Matches user={user} navigation={this.props.navigation} />
         ]}
       />
     );

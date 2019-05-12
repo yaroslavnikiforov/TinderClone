@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { FlatList, Text, View } from "react-native";
+import { FlatList, Text, View, TouchableOpacity } from "react-native";
 import firebase from "firebase";
 import { pickBy, intersection, keys, find } from "lodash";
 import CircleImage from "../../components/CircleImage";
@@ -8,7 +8,8 @@ import styles from "./styles";
 
 class Matches extends Component {
   static propTypes = {
-    user: PropTypes.object
+    user: PropTypes.object,
+    navigation: PropTypes.object
   };
 
   state = {
@@ -33,21 +34,29 @@ class Matches extends Component {
       work && work[0] && work[0].position ? work[0].position.name : null;
 
     return (
-      <View style={styles.row}>
-        <CircleImage size={80} id={id} />
+      <TouchableOpacity
+        onPress={this._onMatchItemPress}
+        activeOpacity={0.8}
+        hitSlop={{ left: 20, right: 20 }}
+      >
+        <View style={styles.row}>
+          <CircleImage size={80} id={id} />
 
-        <View style={styles.info}>
-          <Text style={styles.name}>{first_name}</Text>
+          <View style={styles.info}>
+            <Text style={styles.name}>{first_name}</Text>
 
-          <Text style={styles.bio}>{bio}</Text>
+            <Text style={styles.bio}>{bio}</Text>
+          </View>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
 
   componentDidMount() {
     this._getMatches(this.props.user.uid);
   }
+
+  _onMatchItemPress = () => this.props.navigation.navigate("Chat");
 
   _renderSeparator = () => <View style={styles.separator} />;
 
