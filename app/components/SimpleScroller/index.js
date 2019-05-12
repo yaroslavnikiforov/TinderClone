@@ -22,35 +22,40 @@ class SimpleScroller extends Component {
     this.pan = new Animated.Value(0);
 
     this.scrollResponder = PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
+      onStartShouldSetPanResponder: () => false,
+      onMoveShouldSetPanResponder: (e, { dx, dy }) =>
+        Math.abs(dx) > Math.abs(dy),
       onPanResponderGrant: () => {
         this.pan.setOffset(this.pan._value);
         this.pan.setValue(0);
       },
       onPanResponderMove: Animated.event([null, { dx: this.pan }]),
-      onPanResponderRelease: (e, { vx }) => {
-        this.pan.flattenOffset();
-        let move = Math.round(this.pan._value / width) * width;
-
-        if (Math.abs(vx) > 0.25) {
-          const direction = vx / Math.abs(vx);
-          const scrollPosition =
-            direction > 0
-              ? Math.ceil(this.pan._value / width)
-              : Math.floor(this.pan._value / width);
-
-          move = scrollPosition * width;
-        }
-
-        const minScroll = (props.screens.length - 1) * -width;
-
-        Animated.spring(this.pan, {
-          toValue: this._clamp(move, minScroll, 0),
-          bounciness: 0
-        }).start();
-      }
+      onPanResponderReject: this._handlePanResponderEnd,
+      onPanResponderRelease: this._handlePanResponderEnd
     });
   }
+
+  _handlePanResponderEnd = (e, { vx }) => {
+    this.pan.flattenOffset();
+    let move = Math.round(this.pan._value / width) * width;
+
+    if (Math.abs(vx) > 0.25) {
+      const direction = vx / Math.abs(vx);
+      const scrollPosition =
+        direction > 0
+          ? Math.ceil(this.pan._value / width)
+          : Math.floor(this.pan._value / width);
+
+      move = scrollPosition * width;
+    }
+
+    const minScroll = (this.props.screens.length - 1) * -width;
+
+    Animated.spring(this.pan, {
+      toValue: this._clamp(move, minScroll, 0),
+      bounciness: 0
+    }).start();
+  };
 
   _clamp = (num, min, max) => (num <= min ? min : num >= max ? max : num);
 
