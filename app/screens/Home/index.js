@@ -110,8 +110,29 @@ class Home extends Component {
     }
   };
 
-  _swipeCard = () =>
+  _swipeCard = (swipedRight, profileUid) => {
+    const userUid = this.state.user.uid;
+
     this.setState(state => ({ profileIndex: state.profileIndex + 1 }));
+
+    if (swipedRight) {
+      this._relate(userUid, profileUid, true);
+    } else {
+      this._relate(userUid, profileUid, false);
+    }
+  };
+
+  _relate = (userUid, profileUid, status) => {
+    let relationUpdate = {};
+
+    relationUpdate[`${userUid}/liked/${profileUid}`] = status;
+    relationUpdate[`${profileUid}/likedBack/${userUid}`] = status;
+
+    firebase
+      .database()
+      .ref("relationships")
+      .update(relationUpdate);
+  };
 }
 
 export default Home;

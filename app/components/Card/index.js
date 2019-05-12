@@ -13,7 +13,7 @@ class Card extends Component {
   constructor(props) {
     super(props);
 
-    const { onSwipeOff } = props;
+    const { onSwipeOff, profile } = props;
 
     this.pan = new Animated.ValueXY();
     this.cardPanResponder = PanResponder.create({
@@ -24,13 +24,14 @@ class Card extends Component {
       ]),
       onPanResponderRelease: (e, { dx }) => {
         const absDx = Math.abs(dx);
-        direction = absDx / dx;
+        const direction = absDx / dx;
+        const swipedRight = direction > 0;
 
         if (absDx > 120) {
           Animated.decay(this.pan, {
             velocity: { x: 3 * direction, y: 0 },
             deceleration: 0.995
-          }).start(onSwipeOff);
+          }).start(() => onSwipeOff(swipedRight, profile.uid));
         } else {
           Animated.spring(this.pan, {
             toValue: { x: 0, y: 0 },
