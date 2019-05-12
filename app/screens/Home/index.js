@@ -6,6 +6,7 @@ import * as firebase from "firebase";
 import Card from "../../components/Card";
 import SimpleScroller from "../../components/SimpleScroller";
 import Profile from "../Profile";
+import Matches from "../Matches";
 import filter from "../../modules/filter";
 import styles from "./styles";
 
@@ -19,7 +20,11 @@ class Home extends Component {
   render() {
     return (
       <SimpleScroller
-        screens={[<Profile user={this.state.user} />, this._renderCardStack()]}
+        screens={[
+          <Profile user={this.state.user} />,
+          this._renderCardStack(),
+          <Matches />
+        ]}
       />
     );
   }
