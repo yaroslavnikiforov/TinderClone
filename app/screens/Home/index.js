@@ -73,9 +73,20 @@ class Home extends Component {
       .once("value");
   };
 
+  getSwiped = uid => {
+    return firebase
+      .database()
+      .ref("relationships")
+      .child(uid)
+      .child("liked")
+      .once("value")
+      .then(snap => snap.val() || {});
+  };
+
   _getProfiles = async (uid, distance) => {
     const geoFireRef = new GeoFire(firebase.database().ref("geoData"));
     const userLocation = await geoFireRef.get(uid);
+    const swipedProfiles = await this.getSwiped(uid);
     const geoQuery = geoFireRef.query({
       center: userLocation,
       radius: distance // km
@@ -84,7 +95,7 @@ class Home extends Component {
     geoQuery.on("key_entered", async (uid, location, distance) => {
       const user = await this._getUser(uid);
       const profiles = [...this.state.profiles, user.val()];
-      const filtered = filter(profiles, this.state.user);
+      const filtered = filter(profiles, this.state.user, swipedProfiles);
 
       this.setState({ profiles: filtered });
     });
