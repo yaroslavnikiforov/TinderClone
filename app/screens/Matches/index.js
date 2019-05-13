@@ -35,7 +35,7 @@ class Matches extends Component {
 
     return (
       <TouchableOpacity
-        onPress={this._onMatchItemPress}
+        onPress={this._onMatchItemPress(item)}
         activeOpacity={0.8}
         hitSlop={{ left: 20, right: 20 }}
       >
@@ -56,7 +56,8 @@ class Matches extends Component {
     this._getMatches(this.props.user.uid);
   }
 
-  _onMatchItemPress = () => this.props.navigation.navigate("Chat");
+  _onMatchItemPress = profile => () =>
+    this.props.navigation.navigate("Chat", { user: this.props.user, profile });
 
   _renderSeparator = () => <View style={styles.separator} />;
 
