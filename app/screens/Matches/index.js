@@ -85,10 +85,9 @@ class Matches extends Component {
       .child(uid)
       .on("value", snap => {
         const relations = snap.val();
-        const allMatches = this._getOverlap(
-          relations.liked,
-          relations.likedBack
-        );
+        const allMatches = relations
+          ? this._getOverlap(relations.liked, relations.likedBack)
+          : [];
 
         const promises = allMatches.map(profileUid => {
           const foundProfile = find(

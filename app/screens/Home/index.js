@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Permissions, Location } from "expo";
-import { View, StyleSheet } from "react-native";
+import { View, ImageBackground } from "react-native";
 import GeoFire from "geofire";
 import * as firebase from "firebase";
 import Card from "../../components/Card";
@@ -35,7 +35,10 @@ class Home extends Component {
     const { profileIndex, profiles } = this.state;
 
     return (
-      <View style={styles.container}>
+      <ImageBackground
+        source={require("../../../assets/no_image.png")}
+        style={styles.container}
+      >
         {profiles
           .slice(profileIndex, profileIndex + 3)
           .reverse()
@@ -46,7 +49,7 @@ class Home extends Component {
               onSwipeOff={this._swipeCard}
             />
           ))}
-      </View>
+      </ImageBackground>
     );
   };
 
